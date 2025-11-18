@@ -1,4 +1,8 @@
 import React, { useState } from 'react'
+import '../Signup.css'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 
 export default function Signup() {
 
@@ -7,49 +11,96 @@ export default function Signup() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [allUsers, setAllUsers] = useState([])
+  const [showPassword, setShowPassword] = useState('')
 
-  const handleSubmit = () =>{
+  const navigate = useNavigate()
 
-    let userInfo = {
-      firstName, lastName, email, password
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const userInfo = {
+      firstName,
+      lastName,
+      email,
+      password
     }
 
-    let newAllUsers = [...allUsers, userInfo]
-    setAllUsers(newAllUsers)
-    console.log(newAllUsers)
+    try {
+      await axios.post('http://localhost:3000/user/register', userInfo)
+      // console.log('Successful:', res.data)
+      navigate('/signin')
+    } catch (err) {
+      console.log('Error Signing up:', err.response ? err.response.data : err)
+    }
 
-    
+    const updatedList = [...allUsers, userInfo]
+    setAllUsers(updatedList)
   }
 
-  const handleDelete = (index)=>{
-    // const filterUser = allUsers.filter((others,i)=>i !=index)
-    const spliedUser = allUsers.slice(index, 1)
-    setAllUsers(spliedUser)
-    // setAllUsers(filterUser)
+  const handleDelete = (index) => {
+    const updatedList = allUsers.filter((_, i) => i !== index)
+    setAllUsers(updatedList)
   }
 
   return (
     <>
-      <form >
-        <h1>Register Here</h1>
-        <input type="text" placeholder='First name' id='firtname' onChange={(e)=>{setFirstName(e.target.value)}} />
-        <input type="text" placeholder='Last name' id='lastname' onChange={(e)=>{setLastName(e.target.value)}} />
-        <input type="email" placeholder='email' id='emaill' onChange={(e)=>{setEmail(e.target.value)}}/>
-        <input type="password" placeholder='Password' id='passwordd' onChange={(e)=>{setPassword(e.target.value)}}/>
-        <button type='button' onClick={handleSubmit}>Submit</button>
-      </form>
+      <div className="signup-container">
 
-      {
-        allUsers.map((user, index)=>(
-          <div key={index}>
-            <h1>{user.firstName}</h1>
-            <h1>{user.lastName}</h1>
-            <h1>{user.email}</h1>
-            <h1>{user.password}</h1>
-            <button onClick={()=>handleDelete(index)}>delete</button>
+        <form className="signup-form" onSubmit={handleSubmit}>
+          <h1>Register Here</h1>
+
+          <input
+            type="text"
+            placeholder="Firstname"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+
+          <input
+            type="text"
+            placeholder="Lastname"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <div>
+            <input
+              type={showPassword ? 'text' : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <span onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? <FaEyeSlash/> : <FaEye/>}
+            </span>
           </div>
-        ))
-      }
+
+          <button type="submit">Submit</button>
+        </form>
+
+        <div className="users-list">
+          {allUsers.map((user, index) => (
+            <div className="user-card" key={index}>
+              <p><strong>First Name:</strong> {user.firstName}</p>
+              <p><strong>Last Name:</strong> {user.lastName}</p>
+              <p><strong>Email:</strong> {user.email}</p>
+              <p><strong>Password:</strong> {user.password}</p>
+
+              <button className="delete-btn" onClick={() => handleDelete(index)}>
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
+
+      </div>
     </>
   )
 }
