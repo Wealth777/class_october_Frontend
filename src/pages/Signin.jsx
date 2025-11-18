@@ -16,7 +16,7 @@ export default function Signin() {
     setError('')
     const userInfo = { email, password }
     try {
-      await axios.post('http://localhost:3000/user/login', userInfo)
+      await axios.post('https://class-backend-viue.onrender.com/user/login', userInfo)
       alert('Successful')
     } catch (err) {
       console.log(err.response ? err.response.data : err)

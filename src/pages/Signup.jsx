@@ -26,7 +26,7 @@ export default function Signup() {
     }
 
     try {
-      await axios.post('http://localhost:3000/user/register', userInfo)
+      await axios.post('https://class-backend-viue.onrender.com/user/register', userInfo)
       // console.log('Successful:', res.data)
       navigate('/signin')
     } catch (err) {
