@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import '../SignIn.css'
 import axios from 'axios';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 export default function Signin() {
   const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ export default function Signin() {
   const [error, setError] = useState('')
   const [showpassword, setShowpassword] = useState('')
 
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,6 +19,7 @@ export default function Signin() {
     const userInfo = { email, password }
     try {
       await axios.post('https://class-backend-viue.onrender.com/user/login', userInfo)
+      navigate('/dasborad')
       alert('Successful')
     } catch (err) {
       console.log(err.response ? err.response.data : err)
