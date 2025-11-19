@@ -18,9 +18,15 @@ export default function Signin() {
     setError('')
     const userInfo = { email, password }
     try {
-      await axios.post('https://class-backend-viue.onrender.com/user/login', userInfo)
-      navigate('/dasborad')
+      const res = await axios.post('https://class-backend-viue.onrender.com/user/login', userInfo)
+      console.log(res.data)
+      if(res.data.token){
+        localStorage.setItem('token', res.data.token)
+        console.log('Token saved', res.data.token)
+      }
+
       alert('Successful')
+      navigate('/dasborad')
     } catch (err) {
       console.log(err.response ? err.response.data : err)
       setError(`Error occur: ${err.response ? err.response.data : err}`)
