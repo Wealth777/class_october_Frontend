@@ -18,7 +18,7 @@ export default function Signin() {
     setError('')
     const userInfo = { email, password }
     try {
-      const res = await axios.post('https://class-backend-viue.onrender.com/user/login', userInfo)
+      const res = await axios.post('https://class-backend-jjl5.onrender.com/user/login', userInfo)
       console.log(res.data)
       if(res.data.token){
         localStorage.setItem('token', res.data.token)
